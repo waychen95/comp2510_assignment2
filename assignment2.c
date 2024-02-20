@@ -48,6 +48,53 @@ void simulate(char ***arr, int x, int y)
   *arr = newArr;
 }
 
+// call this function in a for loop for each second the simulation runs.
+void moveParticles(Particle *arr, int length, int gridLengthx, int gridLengthy){
+// for each particle in the array given.
+  for(int i = 0; i < length; i++){
+    // if the particle is going to move in the x direction
+    if(arr[i].vx != 0){
+      // check if the particle will move past the maximum if so bounce, then invert the velocity
+    if(arr[i].x + arr[i].vx > gridLengthx){
+      arr[i].x = gridLengthx - (gridLengthx - (arr[i].vx + arr[i].x));
+      arr[i].vx = arr[i].vx * -1;
+    // if past the minimum, bounce and invert
+    } else if (arr[i].x + arr[i].vx < 0 ){
+            arr[i].x = (arr[i].vx + arr[i].x) * -1;
+            arr[i].vx = arr[i].vx * -1;
+    } else{ //regularly move the particle
+      arr[i].x = arr[i].x + arr[i].vx;
+    }
+    }
+    // does the same thing for y as it did for x.
+
+    if(arr[i].vy != 0){
+    if(arr[i].y + arr[i].vy > gridLengthy){
+      arr[i].y = gridLengthy - (gridLengthy - (arr[i].vy + arr[i].y));
+      arr[i].vy = arr[i].vy * -1;
+
+    } else if (arr[i].y + arr[i].vy < 0 ){
+            arr[i].y = (arr[i].vy + arr[i].y) * -1;
+            arr[i].vy = arr[i].vy * -1;
+    } else{
+      arr[i].y = arr[i].y + arr[i].vy;
+    }
+    }
+    //check if the particles have colided. if they colide, set their velocity to 0, making them stop
+    for(int a = 0; a < length; a++){
+      if(arr[i].x == arr[a].x && arr[i].y == arr[i].y){
+        arr[i].vx = 0;
+        arr[i].vy = 0;
+        arr[a].vx = 0;
+        arr[a].vy = 0;
+      }
+    }
+
+}
+
+
+}
+
 Particle makeParticle(int x, int y, int vx, int vy){
   Particle temp;
   temp.x = x;
@@ -85,10 +132,6 @@ int main(int argc, char *argv[])
     // Read the zoom factor
     fscanf(file, "%d", &time);
 
-
-
-
-
     // Allocate memory for the 2D array
     char **arr = (char **)malloc(rows * sizeof(char *));
     if (arr == NULL)
@@ -105,9 +148,6 @@ int main(int argc, char *argv[])
             return 1;
         }
     }
-
-
-
 
     simulate(&arr, rows, cols);
 
