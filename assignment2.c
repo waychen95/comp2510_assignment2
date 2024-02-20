@@ -10,24 +10,21 @@ typedef struct {
 
 void simulate(char ***arr, int x, int y)
 {
-  //the size of the border
-  int newX = x + 2;
-  int newY = y + 2;
 
   //allocate memory for 
-  char **newArr = (char **)malloc(newX * newY * sizeof(char *));
+  char **newArr = (char **)malloc(x * y * sizeof(char *));
 
-  for (int i = 0; i < newX; i++)
+  for (int i = 0; i < x; i++)
   {
-      newArr[i] = (char *)malloc(newY * sizeof(char));
+      newArr[i] = (char *)malloc(y * sizeof(char));
   }
 
   //create the border
-  for (int i = 0; i < newX; i++)
+  for (int i = 0; i < x; i++)
   {
-      for (int j = 0; j < newY; j++)
+      for (int j = 0; j < y; j++)
       {
-          if (i == 0 || i == newX - 1 || j == 0 || j == newY - 1)
+          if (i == 0 || i == x - 1 || j == 0 || j == y - 1)
           {
               newArr[i][j] = '*';
           }
@@ -37,13 +34,6 @@ void simulate(char ***arr, int x, int y)
           }
       }
   }
-
-  //free the memory of the border
-  for (int i = 0; i < x; i++)
-  {
-      free((*arr)[i]);
-  }
-  free(*arr);
 
   *arr = newArr;
 }
@@ -104,7 +94,6 @@ Particle makeParticle(int x, int y, int vx, int vy){
   return temp;
 }
 
-
 int main(int argc, char *argv[])
 {
     if (argc != 3)
@@ -117,6 +106,7 @@ int main(int argc, char *argv[])
     char *outputFileName = argv[2];
 
     int rows, cols, time;
+    Particle particles[1000];
 
     FILE *file = fopen(inputFileName, "r");
     if (file == NULL)
@@ -129,8 +119,18 @@ int main(int argc, char *argv[])
     fscanf(file, "%d", &rows);
     // Read the column value
     fscanf(file, "%d", &cols);
-    // Read the zoom factor
+    // Read the 
     fscanf(file, "%d", &time);
+
+    int particle_count = 0;
+while (fgetc(file) != 'E' && fscanf(file, "%d, %d, %d, %d", &particles[particle_count].x, &particles[particle_count].y, &particles[particle_count].vx, &particles[particle_count].vy) == 4) { 
+      particle_count++;
+    }
+
+    for (int i = 0; i < particle_count; i++) {
+      printf("%d", particles[i].x);
+      printf("%d\n", particles[i].y);
+    }
 
     // Allocate memory for the 2D array
     char **arr = (char **)malloc(rows * sizeof(char *));
@@ -149,7 +149,11 @@ int main(int argc, char *argv[])
         }
     }
 
-    simulate(&arr, rows, cols);
+    //the size of the border
+    int borderRows = rows + 2;
+    int borderCols = cols + 2;
+
+    simulate(&arr, borderRows, borderCols);
 
     FILE *outputFile = fopen(outputFileName, "w");
     if (outputFile == NULL)
