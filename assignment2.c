@@ -1,25 +1,28 @@
 #include <stdio.h>
 
+typedef struct {
+    int x;
+    int y;
+    int vx;
+    int vy;
+} Particle;
 
+void simulate(char **arr, int rows, int cols, int t) {
 
-void simulate(char **arr, int x, int y, int t) {
+  char **newArr = (char **)malloc(rows * cols * sizeof(char *));
+  
+  for (int i = 0; i < rows; i++) {
+      newArr[i] = (char *)malloc(cols * sizeof(char));
+  }
 
-    int newX = x + 2;
-    int newY = y + 2;
+  for (int i = 0; i < rows; i++) {
+      for (int j = 0; j < cols; j++) {
+          if (i == 0 || i == -1 || j == 0 || j == -1) {
+              newArr[i][j] = '*';
+          }
+      }
+  }
 
-    char **newArr = (char **)malloc(newX * newY * sizeof(char *));
-    
-        for (int i = 0; i < newX; i++) {
-            newArr[i] = (char *)malloc(newY * sizeof(char));
-        }
-
-    for (int i = 0; i < newX; i++) {
-        for (int j = 0; j < newY; j++) {
-            if (i == 0 || i == -1 || j == 0 || j == -1) {
-                newArr[i][j] = '*';
-            }
-        }
-    }
 
 }
 
@@ -51,24 +54,10 @@ int main(int argc, char *argv[])
   // Read the zoom factor
   fscanf(file, "%f", &time);
 
-  // Allocate memory for the 2D array
-  arr = (char **)malloc(rows * sizeof(char *));
-  if (arr == NULL)
-  {
-      printf("Memory allocation failed.\n");
-      return 1;
-  }
-  for (int i = 0; i < rows; i++)
-  {
-      arr[i] = (char *)malloc(cols * sizeof(char));
-      if (arr[i] == NULL)
-      {
-          printf("Memory allocation failed.\n");
-          return 1;
-      }
-  }
+  rows += 2;
+  cols += 2;
 
-
+  simulate();
 
 
 
