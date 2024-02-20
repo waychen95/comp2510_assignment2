@@ -10,24 +10,21 @@ typedef struct {
 
 void simulate(char ***arr, int x, int y)
 {
-  //the size of the border
-  int newX = x + 2;
-  int newY = y + 2;
 
   //allocate memory for 
-  char **newArr = (char **)malloc(newX * newY * sizeof(char *));
+  char **newArr = (char **)malloc(x * y * sizeof(char *));
 
-  for (int i = 0; i < newX; i++)
+  for (int i = 0; i < x; i++)
   {
-      newArr[i] = (char *)malloc(newY * sizeof(char));
+      newArr[i] = (char *)malloc(y * sizeof(char));
   }
 
   //create the border
-  for (int i = 0; i < newX; i++)
+  for (int i = 0; i < x; i++)
   {
-      for (int j = 0; j < newY; j++)
+      for (int j = 0; j < y; j++)
       {
-          if (i == 0 || i == newX - 1 || j == 0 || j == newY - 1)
+          if (i == 0 || i == x - 1 || j == 0 || j == y- 1)
           {
               newArr[i][j] = '*';
           }
@@ -72,7 +69,7 @@ int main(int argc, char *argv[])
     fscanf(file, "%d", &rows);
     // Read the column value
     fscanf(file, "%d", &cols);
-    // Read the zoom factor
+    // Read the 
     fscanf(file, "%d", &time);
 
     // Allocate memory for the 2D array
@@ -91,6 +88,10 @@ int main(int argc, char *argv[])
             return 1;
         }
     }
+
+    //the size of the border
+    int borderRows = rows + 2;
+    int borderCols = cols + 2;
 
     simulate(&arr, rows, cols);
 
