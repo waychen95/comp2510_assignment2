@@ -41,6 +41,7 @@ void simulate(char ***arr, int x, int y)
 
 // call this function in a for loop for each second the simulation runs.
 void moveParticles(Particle *arr, int length, int gridLengthx, int gridLengthy){
+  gridLengthy = gridLengthy -1;
 // for each particle in the array given.
   for(int i = 0; i < length; i++){
     if(arr[i].colided != 0){
