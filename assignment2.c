@@ -37,7 +37,7 @@ void updateGrid(char ***arr, int x, int y, Particle *parr, int count)
   }
 
   for (int p = 0; p < count && parr[p].colided != 1; p++) {
-    newArr[parr[p].y + 2][parr[p].x + 2] = '+';
+    newArr[parr[p].y + 3][parr[p].x + 2] = '+';
   }
 
   *arr = newArr;
@@ -45,9 +45,11 @@ void updateGrid(char ***arr, int x, int y, Particle *parr, int count)
 
 // call this function in a for loop for each second the simulation runs.
 void moveParticles(Particle *arr, int length, int gridLengthx, int gridLengthy){
-  gridLengthy = gridLengthy -1;
+
+  
 // for each particle in the array given.
   for(int i = 0; i < length; i++){
+    printf("52 \n");
     if(arr[i].colided != 0){
     // if the particle is going to move in the x direction
     if(arr[i].vx != 0){
@@ -79,7 +81,7 @@ void moveParticles(Particle *arr, int length, int gridLengthx, int gridLengthy){
     }
     //check if the particles have colided. if they colide, set their velocity to 0, making them stop
     for(int a = 0; a < length; a++){
-      if(arr[i].x == arr[a].x && arr[i].y == arr[i].y){
+      if(arr[i].x == arr[a].x && arr[i].y == arr[a].y){
         arr[i].colided = 1;
         arr[a].colided = 1;
       }
@@ -162,6 +164,10 @@ int main(int argc, char *argv[])
 
     updateGrid(&arr, borderRows, borderCols, particles, particle_count);
 
+    for(int i = 0; i < time; i++){
+      moveParticles(particles, particle_count, cols, rows);
+    }
+
     FILE *outputFile = fopen(outputFileName, "w");
     if (outputFile == NULL)
     {
@@ -169,9 +175,9 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    for (int i = 0; i < rows + 2; i++)
+    for (int i = 0; i < cols + 2; i++)
     {
-        for (int j = 0; j < cols + 2; j++)
+        for (int j = 0; j < rows + 2; j++)
         {
             fprintf(outputFile, "%c", arr[i][j]);
         }
