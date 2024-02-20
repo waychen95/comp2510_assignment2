@@ -37,7 +37,7 @@ void updateGrid(char ***arr, int x, int y, Particle *parr, int count)
   }
 
   for (int p = 0; p < count && parr[p].colided != 1; p++) {
-    newArr[parr[p].y + 3][parr[p].x + 2] = '+';
+    newArr[parr[p].y + 3][parr[p].x + 1] = '+';
   }
 
   *arr = newArr;
@@ -45,49 +45,29 @@ void updateGrid(char ***arr, int x, int y, Particle *parr, int count)
 
 // call this function in a for loop for each second the simulation runs.
 void moveParticles(Particle *arr, int length, int gridLengthx, int gridLengthy) {
-    // for each particle in the array given.
-    for (int i = 0; i < length; i++) {
-        if (arr[i].colided == 0) {
-            // if the particle is going to move in the x direction
-            if (arr[i].vx != 0) {
-                // check if the particle will move past the maximum if so bounce, then invert the velocity
-                if (arr[i].x + arr[i].vx > gridLengthx) {
-                    arr[i].x = gridLengthx - (arr[i].x + arr[i].vx - gridLengthx);
-                    arr[i].vx = -arr[i].vx;
-                }
-                // if past the minimum, bounce and invert
-                else if (arr[i].x + arr[i].vx < 0) {
-                    arr[i].x = -(arr[i].x + arr[i].vx);
-                    arr[i].vx = -arr[i].vx;
-                }
-                // regularly move the particle
-                else {
-                    arr[i].x = arr[i].x + arr[i].vx;
-                }
-            }
-            // does the same thing for y as it did for x.
+  // Move particles
+  for (int j = 0; j < length && arr[j].x != -1; j++) {
+      arr[j].x += arr[j].vx;
+      arr[j].y += arr[j].vy;
 
-            if (arr[i].vy != 0) {
-                if (arr[i].y + arr[i].vy > gridLengthy) {
-                    arr[i].y = gridLengthy - (arr[i].y + arr[i].vy - gridLengthy);
-                    arr[i].vy = -arr[i].vy;
-                } else if (arr[i].y + arr[i].vy < 0) {
-                    arr[i].y = -(arr[i].y + arr[i].vy);
-                    arr[i].vy = -arr[i].vy;
-                } else {
-                    arr[i].y = arr[i].y + arr[i].vy;
-                }
-            }
-            //check if the particles have collided. if they collide, set their velocity to 0, making them stop
-            for (int a = i + 1; a < length; a++) {
-                if (arr[i].x == arr[a].x && arr[i].y == arr[a].y) {
-                    arr[i].colided = 1;
-                    arr[a].colided = 1;
-                    break;
-                }
-            }
-        }
-    }
+      // Handle border bouncing
+      if (arr[j].x <= 0 || arr[j].x >= gridLengthx - 1) {
+          arr[j].vx *= -1;
+      }
+      if (arr[j].y <= 0 || arr[j].y >= gridLengthy - 1) {
+          arr[j].vy *= -1;
+      }
+  }
+
+  // Check for collisions
+  for (int j = 0; j < length && arr[j].x != -1; j++) {
+      for (int k = j + 1; k < length && arr[k].x != -1; k++) {
+          if (arr[j].x == arr[k].x && arr[j].y == arr[k].y) {
+              arr[j].x = arr[k].x = -1;
+              break;
+          }
+      }
+  }
 }
 
 Particle makeParticle(int x, int y, int vx, int vy){
