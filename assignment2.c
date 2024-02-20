@@ -24,7 +24,7 @@ void simulate(char ***arr, int x, int y)
   {
       for (int j = 0; j < y; j++)
       {
-          if (i == 0 || i == x - 1 || j == 0 || j == y- 1)
+          if (i == 0 || i == x - 1 || j == 0 || j == y - 1)
           {
               newArr[i][j] = '*';
           }
@@ -35,14 +35,16 @@ void simulate(char ***arr, int x, int y)
       }
   }
 
-  //free the memory of the border
-  for (int i = 0; i < x; i++)
-  {
-      free((*arr)[i]);
-  }
-  free(*arr);
-
   *arr = newArr;
+}
+
+Particle makeParticle(int x, int y, int vx, int vy){
+  Particle temp;
+  temp.x = x;
+  temp.y = y;
+  temp.vx = vx;
+  temp.vy = vy;
+  return temp;
 }
 
 int main(int argc, char *argv[])
@@ -57,6 +59,7 @@ int main(int argc, char *argv[])
     char *outputFileName = argv[2];
 
     int rows, cols, time;
+    Particle particles[1000];
 
     FILE *file = fopen(inputFileName, "r");
     if (file == NULL)
@@ -71,6 +74,19 @@ int main(int argc, char *argv[])
     fscanf(file, "%d", &cols);
     // Read the 
     fscanf(file, "%d", &time);
+
+    int particle_count = 0;
+    while (fscanf(file, "%d, %d, %d, %d", &particles[particle_count].x, &particles[particle_count].y, &particles[particle_count].vx, &particles[particle_count].vy) == 4) {
+      if (fgetc(file) == 'E') {
+          break;
+      }
+      particle_count++;
+    }
+
+    for (int i = 0; i < particle_count; i++) {
+      printf("%d", particles[i].x);
+      printf("%d\n", particles[i].y);
+    }
 
     // Allocate memory for the 2D array
     char **arr = (char **)malloc(rows * sizeof(char *));
@@ -93,7 +109,7 @@ int main(int argc, char *argv[])
     int borderRows = rows + 2;
     int borderCols = cols + 2;
 
-    simulate(&arr, rows, cols);
+    simulate(&arr, borderRows, borderCols);
 
     FILE *outputFile = fopen(outputFileName, "w");
     if (outputFile == NULL)
