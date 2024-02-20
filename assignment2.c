@@ -9,7 +9,7 @@ typedef struct {
     int colided;
 } Particle;
 
-void updateGrid(char ***arr, int x, int y, Particle *parr)
+void updateGrid(char ***arr, int x, int y, Particle *parr, int count)
 {
 
   //allocate memory for 
@@ -36,6 +36,10 @@ void updateGrid(char ***arr, int x, int y, Particle *parr)
       }
   }
 
+  for (int p = 0; p < count && parr[p].colided != 1; p++) {
+    newArr[parr[p].y + 2][parr[p].x + 2] = '+';
+  }
+
   *arr = newArr;
 }
 
@@ -43,6 +47,7 @@ void updateGrid(char ***arr, int x, int y, Particle *parr)
 void moveParticles(Particle *arr, int length, int gridLengthx, int gridLengthy){
 // for each particle in the array given.
   for(int i = 0; i < length; i++){
+    if(arr[i].colided != 0){
     // if the particle is going to move in the x direction
     if(arr[i].vx != 0){
     // check if the particle will move past the maximum if so bounce, then invert the velocity
@@ -74,15 +79,14 @@ void moveParticles(Particle *arr, int length, int gridLengthx, int gridLengthy){
     //check if the particles have colided. if they colide, set their velocity to 0, making them stop
     for(int a = 0; a < length; a++){
       if(arr[i].x == arr[a].x && arr[i].y == arr[i].y){
-        arr[i].vx = 0;
-        arr[i].vy = 0;
-        arr[a].vx = 0;
-        arr[a].vy = 0;
         arr[i].colided = 1;
         arr[a].colided = 1;
       }
     }
-  }
+    }
+}
+
+
 }
 
 Particle makeParticle(int x, int y, int vx, int vy){
@@ -91,6 +95,7 @@ Particle makeParticle(int x, int y, int vx, int vy){
   temp.y = y;
   temp.vx = vx;
   temp.vy = vy;
+  temp.colided = 0;
   return temp;
 }
 
@@ -154,7 +159,7 @@ int main(int argc, char *argv[])
     int borderRows = rows + 2;
     int borderCols = cols + 2;
 
-    updateGrid(&arr, borderRows, borderCols);
+    updateGrid(&arr, borderRows, borderCols, particles, particle_count);
 
     FILE *outputFile = fopen(outputFileName, "w");
     if (outputFile == NULL)
