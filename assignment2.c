@@ -48,6 +48,16 @@ void simulate(char ***arr, int x, int y)
   *arr = newArr;
 }
 
+Particle makeParticle(int x, int y, int vx, int vy){
+  Particle temp;
+  temp.x = x;
+  temp.y = y;
+  temp.vx = vx;
+  temp.vy = vy;
+  return temp;
+}
+
+
 int main(int argc, char *argv[])
 {
     if (argc != 3)
@@ -75,6 +85,10 @@ int main(int argc, char *argv[])
     // Read the zoom factor
     fscanf(file, "%d", &time);
 
+
+
+
+
     // Allocate memory for the 2D array
     char **arr = (char **)malloc(rows * sizeof(char *));
     if (arr == NULL)
@@ -91,6 +105,9 @@ int main(int argc, char *argv[])
             return 1;
         }
     }
+
+
+
 
     simulate(&arr, rows, cols);
 
