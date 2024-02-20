@@ -76,10 +76,7 @@ int main(int argc, char *argv[])
     fscanf(file, "%d", &time);
 
     int particle_count = 0;
-    while (fscanf(file, "%d, %d, %d, %d", &particles[particle_count].x, &particles[particle_count].y, &particles[particle_count].vx, &particles[particle_count].vy) == 4) {
-      if (fgetc(file) == 'E') {
-          break;
-      }
+    while (fgetc(file) != 'E' && fscanf(file, "%d, %d, %d, %d", &particles[particle_count].x, &particles[particle_count].y, &particles[particle_count].vx, &particles[particle_count].vy) == 4) { 
       particle_count++;
     }
 
